@@ -121,7 +121,61 @@ const AuthProvider = ({ children }) => {
       });
   }
 
-  const value = { user, signup, signin, signout, checkToken };
+  const checkAdminToken = async () => {
+    const access_token = localStorage.getItem('access_token');
+    const refresh_token = localStorage.getItem('refresh_token');
+
+    if (access_token === null || refresh_token === null) {
+      return false;
+    }
+
+    const resetUserAndTokens = () => {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      setUser({
+        email: null,
+        password: null
+      });
+    };
+
+    const payload = {
+      access_token: access_token
+    };
+
+    return axiosTokenApi
+      .post(`api/auth/user/`, payload)
+      .then(res => {
+        setUser(res.data);
+        return res.data.isAdmin;
+      })
+      .catch(err => {
+        if (err.response && err.response.status !== 403) {
+          axiosApi
+            .post(`api/auth/refresh_token/`, { refresh_token })
+            .then(res => {
+              axiosTokenApi
+                .post(`api/auth/user/`, {access_token: res.data.access_token})
+                .then(res => {
+                  setUser(res.data);
+                  return res.data.isAdmin;
+                })
+                .catch(() => {
+                  resetUserAndTokens();
+                  return false;
+                });
+            })
+            .catch(() => {
+              resetUserAndTokens();
+              return false;
+            });
+        } else {
+          resetUserAndTokens();
+          return false;
+        }
+      });
+  }
+
+  const value = { user, signup, signin, signout, checkToken, checkAdminToken };
 
   return (
     <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

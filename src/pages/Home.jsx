@@ -1,13 +1,13 @@
-import Profile from '../table/profile';
-import Worklist from '../table/worklist';
+import Profile from '../components/users/home/profile';
+import Worklist from '../components/users/home/worklist';
 
 const Home = () => {
     return (
-        <div className='flex flex-col items-center justify-center gap-28 w-[80vw] p-10'>
+        <div className='flex flex-col items-center justify-center gap-24 w-[80vw] p-2 sm:pt-0 sm:p-10'>
             <h2 className='text-[30px] font-bold'>
                 マイページ
             </h2>
-            <div className='flex flex-col justify-center gap-4 w-full md:flex-row'>
+            <div className='flex flex-col justify-center gap-16 w-full md:flex-row'>
                 <Profile />
                 <Worklist />
             </div>

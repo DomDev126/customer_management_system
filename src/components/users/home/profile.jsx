@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { axiosTokenApi } from "../utils/axios";
+import { axiosTokenApi } from "../../../utils/axios";
 import Modal from 'react-modal';
 
 
@@ -20,8 +20,6 @@ const Profile = () => {
 
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [address, setAddress] = useState("");
 	const [tel, setTel] = useState("");
 	const [modalIsOpen, setIsOpen] = useState(false);
@@ -59,20 +57,9 @@ const Profile = () => {
 	}
 
 	const handleProfileUpdate = () => {
-		if(password.length < 8) {
-      console.log('password length is less than 8');
-      return;
-    }
-
-    if(password !== passwordConfirm) {
-      console.log('Password confirm is not valid');
-      return;
-    }
-
 		axiosTokenApi
 			.post('api/auth/profile/', {
 				email: email,
-				password: password,
 				name: name,
 				tel: tel,
 				address: address
@@ -83,15 +70,15 @@ const Profile = () => {
 			.catch((err) => {
 				console.log(err);
 			})
-
+		setIsOpen(false);
 	}
 
 	return (
-		<div className="w-full md:w-[45%] relative">
+		<div className="w-full md:w-[48%] relative">
 			<h2 className="text-right text-[24px] font-semibold">
-				Profile
+			プロフィール
 			</h2>
-			<div className="relative w-full p-10 border border-solid border-[#33333333] rounded-xl flex flex-col gap-5">
+			<div className="relative w-full p-10 pt-20 border border-solid border-[#33333333] rounded-xl flex flex-col gap-5">
 				<div className="flex gap-6 items-center border-b border-solid border-[#33333333]">
 					<p className="w-6/12">
 						名前
@@ -125,7 +112,7 @@ const Profile = () => {
 					</p>
 				</div>
 				<div className="absolute top-2 right-2" id="yourAppElement">
-					<button onClick={openModal}>
+					<button onClick={openModal} className="bg-[#0EAAF0] text-white font-medium text-[18px] px-4 py-2">
 						編集
 					</button>
 					<Modal
@@ -156,26 +143,6 @@ const Profile = () => {
 								/>
 							</div>
 							<div className="flex items-center">
-								<p className="w-6/12">パスワード</p>
-								<input 
-									type="text"
-									required
-									className="border border-solid border-[#33333333] p-2 text-[14px] w-6/12"
-									value={password}
-									onChange={(e) => setPassword(e.target.value)}
-								/>
-							</div>
-							<div className="flex items-center">
-								<p className="w-6/12">パスワードの確認</p>
-								<input 
-									type="text"
-									required
-									className="border border-solid border-[#33333333] p-2 text-[14px] w-6/12"
-									value={passwordConfirm}
-									onChange={(e) => setPasswordConfirm(e.target.value)}
-								/>
-							</div>
-							<div className="flex items-center">
 								<p className="w-6/12">住所</p>
 								<input 
 									type="text"
@@ -195,11 +162,11 @@ const Profile = () => {
 								/>
 							</div>
 						</div>
-						<div>
-							<button onClick={handleProfileUpdate}>
+						<div className="flex gap-3 justify-center mt-6">
+							<button onClick={handleProfileUpdate} className="bg-[#0EAAF0] text-white font-medium text-[18px] w-28">
 								OK
 							</button>
-							<button className="" onClick={closeModal}>
+							<button className="bg-[#e27d7d] text-white font-medium text-[18px] w-28" onClick={closeModal}>
 								Close
 							</button>
 						</div>
