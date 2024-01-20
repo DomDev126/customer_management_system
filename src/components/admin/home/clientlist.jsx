@@ -41,7 +41,7 @@ const ClientList = () => {
               <tr key={index}>
                 <td>{index+1}</td>
                 <td>{user.name}</td>
-                <td>{moment(user.created_at).format("MM-DD-YYYY")}</td>
+                <td>{moment(user.created_at).format("YYYY-MM-DD")}</td>
               </tr>
             ))}
           </tbody>
