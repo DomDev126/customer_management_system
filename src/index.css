@@ -63,8 +63,14 @@ th{
 td{
   padding: 10px;
 }
-
-
+th{
+  background-color: #cf93e7;
+  padding: 10px;
+}
+input{
+  border: 1px solid #33333333;
+  padding: 3px;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

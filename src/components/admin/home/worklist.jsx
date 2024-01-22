@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosTokenApi } from "../../../utils/axios";
 import { Modal } from "antd";
+import { STATUS_LIST } from "../../../utils/const";
 
 
 const WorkAdminList = () => {
@@ -11,6 +12,7 @@ const WorkAdminList = () => {
   const [carState, setCarState] = useState(null);
   const [charger, setCharger] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [userName , setUserName] = useState("");
 
   useEffect(() => {
     axiosTokenApi
@@ -33,7 +35,8 @@ const WorkAdminList = () => {
         setCarNumber(res.data.car_number),
         setCharger(res.data.charger),
         setDeadline(res.data.deadline),
-        setCarState(res.data.status)
+        setCarState(res.data.status),
+        setUserName(res.data.user.name)
       })
       .catch(err => {
         console.log(err);
@@ -47,7 +50,7 @@ const WorkAdminList = () => {
     }
 
   return (
-    <div className="flex flex-col gap-6 w-6/12">
+    <div className="flex flex-col gap-6 w-[90%] md:w-6/12">
       <h3 className="text-3xl font-semibold">
         作業一覧
       </h3>
@@ -87,17 +90,36 @@ const WorkAdminList = () => {
           </>
         )}
       >
-        <p>{carNumber}</p>
-        <p>{carState}</p>
-        <p>{charger}</p>
-        <p>{deadline}</p>
-        <p>Some contents...</p>
         <ul>
-          <li>
-            <p>
-            名前
+          <li className="flex">
+            <p className="w-5/12">
+              名前
+            </p>
+            {userName}
+          </li>
+          <li className="flex">
+            <p className="w-5/12">
+              車名称
             </p>
 
+          </li>
+          <li className="flex">
+            <p className="w-5/12">
+              ステータス
+            </p>
+              {STATUS_LIST[carState - 1]}
+          </li>
+          <li className="flex">
+            <p className="w-5/12">
+              締切日
+            </p>
+            {charger}
+          </li>
+          <li className="flex">
+            <p className="w-5/12">
+              担当者
+            </p>
+            {deadline}
           </li>
         </ul>
       </Modal>

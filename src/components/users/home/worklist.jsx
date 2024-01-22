@@ -11,7 +11,7 @@ const customStyles = {
 		bottom: 'auto',
 		marginRight: '-50%',
 		transform: 'translate(-50%, -50%)',
-		width: '30vw',
+		width: '40vw',
 		padding: '3rem',
 	},
 };
@@ -83,12 +83,35 @@ const Worklist = () => {
                             <li className="flex"><p className="w-6/12"> 締切日: </p>{deadline}</li>
                         </ul>
                     </div>
-                    <div>
-                        <h5>
+                    <div className="mt-6">
+                        <h5 className="text-right text-xs">
                             問い合わせ
                         </h5>
-                        <div>
-
+                        <div className=" bg-[#33333320] rounded-xl flex flex-col gap-5 p-3">
+                            <div className="chat flex flex-col gap-4">
+                                <div className="w-full">
+                                    <p className="text-xs bg-white w-8/12">
+                                        テキストテキスト
+                                    </p>
+                                </div>
+                                <div className="w-full flex justify-end">
+                                    <p className="text-xs bg-white w-8/12">
+                                        テキストテキスト
+                                        テキストテキスト
+                                    </p>
+                                </div>
+                                <div className="w-full">
+                                    <p className="text-xs bg-white w-8/12">
+                                        テキストテキスト
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="bg-white p-2 w-full flex justify-between items-center rounded-3xl">
+                                <input type="text" className="w-9/12 outline-none border-none"/>
+                                <button className="p-0 px-3 h-fit">
+                                    >
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </Modal>
