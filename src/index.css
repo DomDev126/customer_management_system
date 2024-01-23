@@ -71,6 +71,9 @@ input{
   border: 1px solid #33333333;
   padding: 3px;
 }
+:where(.css-dev-only-do-not-override-1qhpsh8).ant-btn-primary{
+  background-color: #1677ff;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

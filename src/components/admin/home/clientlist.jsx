@@ -14,9 +14,14 @@ const ClientList = () => {
   const [openModal , setOpenModal] = useState(false);
   const [jobUser , setJobUser] = useState([]);
   const [isEdit , setEdit] = useState(true);
+  const [userId , setUserId] = useState("");
   
 
   useEffect(() => {
+    getProfile();
+  }, [])
+
+  const getProfile = () => {
     axiosTokenApi
       .get("/api/auth/user_list/")
       .then(res => {
@@ -25,25 +30,44 @@ const ClientList = () => {
       .catch(err => {
         console.log(err);
       });
-  }, [])
+  }
 
-const userDetail = (userId) => {
+  const userDetail = (userId) => {
+    setUserId(userId);
+    setOpenModal(true);
 
-  setOpenModal(true);
+    axiosTokenApi
+      .get("/api/auth/user_detail/" , { params : {user_id: userId}})
+      .then(res => {
+        setUserName(res.data.user.name);
+        setUserAddress(res.data.user.address);
+        setUserTel(res.data.user.tel);
+        setUserEmail(res.data.user.email);
+        setJobUser(res.data.jobs);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 
-  axiosTokenApi
-    .get("/api/auth/user_detail/" , { params : {user_id: userId}})
-    .then(res => {
-      setUserName(res.data.user.name);
-      setUserAddress(res.data.user.address);
-      setUserTel(res.data.user.tel);
-      setUserEmail(res.data.user.email);
-      setJobUser(res.data.jobs);
-    })
-    .catch(err => {
-      console.log(err);
-    })
-}
+  const handleUpdate = () => {
+    axiosTokenApi
+      .post("api/auth/user_update/" , {
+        user_id: userId,
+        name : userName,
+        address : userAddress,
+        tel : userTel,
+        email : userEmail,
+      })
+      .then(() => {
+        getProfile();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    
+    setEdit(true);
+  }
 
   return(
     <div className="flex flex-col gap-6 w-[90%] md:w-6/12">
@@ -129,7 +153,7 @@ const userDetail = (userId) => {
             {isEdit ?
               <button className="absolute -top-14 right-6 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={() => setEdit(false)}>編集</button>
               :
-              <button className="absolute -top-14 right-6 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={() => setEdit(true)}>保存</button>
+              <button className="absolute -top-14 right-6 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={handleUpdate}>保存</button>
             }
           </div>
           <div className="mt-5 flex flex-col gap-5">
