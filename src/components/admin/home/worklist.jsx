@@ -92,7 +92,7 @@ const WorkAdminList = () => {
                 <td>車番号{job.car_number}</td>
                 <td>{job.user.name}</td>
                 <td>{job.charger}</td>
-                <td>{STATUS_LIST[carState - 1]}</td>
+                <td>{STATUS_LIST[job.status - 1]}</td>
                 <td>{job.price}</td>
                 <td>{job.deadline}</td>
               </tr>
