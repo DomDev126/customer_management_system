@@ -15,11 +15,15 @@ const ClientList = () => {
   const [jobUser , setJobUser] = useState([]);
   const [isEdit , setEdit] = useState(true);
   const [userId , setUserId] = useState("");
-  
+  const [addJob , setAddJob] = useState(true);
+  const [addCarnumber , setAddCarnumber] = useState("");
+  const [addStatus , setAddStatus] = useState("");
+  const [addDate , setAddDate] = useState("")
+  const [addCharger , setAddCharger] = useState("");
 
   useEffect(() => {
     getProfile();
-  }, [])
+  }, [addCarnumber])
 
   const getProfile = () => {
     axiosTokenApi
@@ -69,8 +73,38 @@ const ClientList = () => {
     setEdit(true);
   }
 
+  const handleAddJob = () => {
+    console.log(addStatus);
+    axiosTokenApi
+      .post("api/job/jobs/" , {
+        user : userId,
+        car_number : addCarnumber,
+        status : addStatus,
+        deadline : addDate,
+        charger : addCharger
+      })
+      .then(() => {
+        getProfile()
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    
+    setAddJob(true);
+  }
+
+  const handleOk = () => {
+    handleUpdate();
+    handleAddJob();
+    setOpenModal(false);
+  }
+  const handleCancel = () => {
+    setEdit(true);
+    setAddJob(true);
+    setOpenModal(false);
+  }
   return(
-    <div className="flex flex-col gap-6 w-[90%] md:w-6/12">
+    <div className="flex flex-col gap-6 w-[90%] lg:w-5/12">
       <h3 className="text-3xl font-semibold">
         顧客一覧
       </h3>
@@ -80,15 +114,17 @@ const ClientList = () => {
             <tr>
               <th>No</th>
               <th>名前</th>
+              <th>住所</th>
               <th>電話番号</th>
               <th>登録日</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr key={index} onClick={() => {userDetail(user.id)}}>
+              <tr className="cursor-pointer" key={index} onClick={() => {userDetail(user.id)}}>
                 <td>{index+1}</td>
                 <td>{user.name}</td>
+                <td>{user.address}</td>
                 <td>{user.tel}</td>
                 <td>{moment(user.created_at).format("YYYY-MM-DD")}</td>
               </tr>
@@ -96,11 +132,11 @@ const ClientList = () => {
           </tbody>
         </table>
         <Modal
-          title = {<p className="font-semibold text-2xl">顧客詳細</p>}
+          title={<p className="font-semibold text-2xl">顧客詳細</p>}
           centered
-          open = {openModal}
-          onOK = {() => setOpenModal(false)}
-          onCancel = {() => setOpenModal(false)}
+          open={openModal}
+          onOk={handleOk}
+          onCancel={handleCancel}
         >
           <div className="border-b border-solid border-b-[#33333333] relative pb-3">
             <ul className="flex flex-col gap-3 mt-5">
@@ -156,25 +192,65 @@ const ClientList = () => {
               <button className="absolute -top-14 right-6 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={handleUpdate}>保存</button>
             }
           </div>
-          <div className="mt-5 flex flex-col gap-5">
+          <div className="mt-5 flex flex-col gap-5 relative">
             <h6 className="font-semibold text-2xl">
             作業
             </h6>
             <div className="p-2 flex flex-col gap-3">
+              <ul className="flex justify-between border-b border-solid border-[#33333333]">
+                <li className="w-2/12 font-bold">
+                  車番号
+                </li>
+                <li className="w-3/12 font-bold">
+                 担当者
+                </li>
+                <li className="w-4/12 font-bold">
+                  ステータス
+                </li>
+                <li className="w-3/12 font-bold">
+                 締切日
+                </li>
+              </ul>
               {jobUser.map((job,index) => (
-                <ul key = {index} className="flex">
-                  <li className="w-4/12">
+                <ul key = {index} className="flex justify-between">
+                  <li className="w-2/12">
                     {job.car_number}
+                  </li>
+                  <li className="w-3/12">
+                    {job.charger}
                   </li>
                   <li className="w-4/12">
                     {STATUS_LIST[job.status - 1]}
                   </li>
-                  <li className="w-4/12">
+                  <li className="w-3/12">
                     {job.deadline}
                   </li>
                 </ul>
               ))}
+              {addJob ? 
+                <div>
+                  
+                </div>
+                :
+                <div className="flex justify-between gap-2">
+                  <input type="text" className="w-2/12" onChange={(e) => setAddCarnumber(e.target.value)}/>
+                  <input type="text" className="w-3/12" onChange={(e) => setAddCharger(e.target.value)}/>
+                  <select className="w-4/12" onChange={(e) => setAddStatus(e.target.value)}>
+                    {STATUS_LIST.map((STATUS, index) => (
+                      <option key={`statys_option${index}`} value={index+1}>{STATUS}</option>
+                    ))}
+                  </select>
+                  <input type="date" className="w-3/12" onChange={(e) => setAddDate(e.target.value)}/>
+                </div>
+              }
+              
             </div>
+            {
+              addJob ? 
+              <button className="absolute top-0 right-5 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={() => setAddJob(false)}>作業登録</button>
+              :
+              <button className="absolute top-0 right-5 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={handleAddJob}>追加する</button>
+            }
           </div>
         </Modal>
       </div>

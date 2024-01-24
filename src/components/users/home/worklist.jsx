@@ -109,7 +109,7 @@ const Worklist = () => {
                             <div className="bg-white p-2 w-full flex justify-between items-center rounded-3xl">
                                 <input type="text" className="w-9/12 outline-none border-none"/>
                                 <button className="p-0 px-3 h-fit">
-                                    >
+                                    <img className="w-[20px]" src="../../../../public/assets/img/send-alt-1-svgrepo-com.svg" alt="send_img" />
                                 </button>
                             </div>
                         </div>
