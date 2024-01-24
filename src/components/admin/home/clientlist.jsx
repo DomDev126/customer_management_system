@@ -57,6 +57,7 @@ const ClientList = () => {
   }
 
   const handleUpdate = () => {
+    
     axiosTokenApi
       .post("api/auth/user_update/" , {
         user_id: userId,
@@ -203,7 +204,7 @@ const ClientList = () => {
             作業
             </h6>
             <div className="p-2 flex flex-col gap-3">
-              <ul className="flex justify-between border-b border-solid border-[#33333333]">
+              <ul className="flex justify-between gap-1 border-b border-solid border-[#33333333]">
                 <li className="w-2/12 font-bold">
                   車番号
                 </li>
@@ -224,7 +225,7 @@ const ClientList = () => {
                 </li>
               </ul>
               {jobUser.map((job,index) => (
-                <ul key = {index} className="flex justify-between">
+                <ul key = {index} className="flex justify-between gap-1">
                   <li className="w-2/12">
                     {job.car_number}
                   </li>
@@ -250,7 +251,7 @@ const ClientList = () => {
                   
                 </div>
                 :
-                <div className="flex justify-between gap-2">
+                <div className="flex justify-between gap-1">
                   <input type="text" className="w-2/12" onChange={(e) => setAddCarnumber(e.target.value)}/>
                   <input type="text" className="w-2/12" onChange={(e) => setAddCharger(e.target.value)}/>
                   <input type="text" className="w-3/12" onChange={(e) => setAddTitle(e.target.value)}/>

@@ -9,6 +9,8 @@ const Login = () => {
   const [isLogin, setLogin] = useState(true);
   const [isShowAlert, setIsShowAlert] = useState(false);
   const [telNumber , setTelNumber] = useState("");
+  const [isErrLength , setErrLength] = useState(false);
+  const [isErrSame , setErrSame] = useState(false);
   const navigate = useNavigate();
 
   const auth = useAuth();
@@ -32,12 +34,12 @@ const Login = () => {
 
   const registerBtn = () => {
     if(password.length < 8) {
-      console.log('password length is less than 8');
+      setErrLength(true);
       return;
     }
 
     if(password !== password_confirm) {
-      console.log('Password confirm is not valid');
+      setErrSame(true);
       return;
     }
     
@@ -61,6 +63,9 @@ const Login = () => {
     setEmail("");
     setPassword("");
     setTelNumber("");
+    setPasswordConfirm("");
+    setErrLength(false);
+    setErrSame(false);
     setLogin(true);
   }
   return (
@@ -83,7 +88,7 @@ const Login = () => {
           ユーザー名(メールアドレス)
           </p>
           <input
-            type="text"
+            type="email"
             className="text-black border border-solid border-[#33333333] w-full p-2"
             id="email"
             placeholder="Enter Email..."
@@ -138,6 +143,13 @@ const Login = () => {
                   />
                   <img className="absolute right-1" src={isPasswordShow ? "/assets/img/eye_off.png" : "/assets/img/eye.png"} onClick={handlePassShow} alt="eye" />
                 </div>
+                {isErrLength && 
+                  <div>
+                    <p className="text-xs text-[#ff4444] font-semibold">
+                      パスワードは8文字以上でなければなりません。
+                    </p>
+                  </div>
+                }
                 <p className="text-black w-full p-2">
                 パスワード（確認用）
                 </p>
@@ -152,6 +164,14 @@ const Login = () => {
                   />
                   <img className="absolute right-1" src={isPasswordShow ? "/assets/img/eye_off.png" : "/assets/img/eye.png"} onClick={handlePassShow} alt="eye" />
                 </div>
+                {
+                  isErrSame &&
+                    <div>
+                      <p className="text-xs text-[#ff4444] font-semibold">
+                        パスワードが一致しません。
+                      </p>
+                    </div>
+                }
               </div>
             </div>
             
