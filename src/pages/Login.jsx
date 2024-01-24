@@ -8,6 +8,7 @@ const Login = () => {
   const [password_confirm, setPasswordConfirm] = useState("");
   const [isLogin, setLogin] = useState(true);
   const [isShowAlert, setIsShowAlert] = useState(false);
+  const [telNumber , setTelNumber] = useState("");
   const navigate = useNavigate();
 
   const auth = useAuth();
@@ -42,7 +43,8 @@ const Login = () => {
     
     auth.signup({
         email: email,
-        password: password
+        password: password,
+        tel: telNumber
     },
     () => (navigate('/')));
   };
@@ -50,7 +52,17 @@ const Login = () => {
   const handlePassShow =() => {
     setIsPasswordShow(!isPasswordShow);
   }
-
+  const handleResister = () => {
+    setEmail("");
+    setPassword("");
+    setLogin(false);
+  }
+  const handleLogin = () => {
+    setEmail("");
+    setPassword("");
+    setTelNumber("");
+    setLogin(true);
+  }
   return (
     <div className="container flex flex-col p-3 items-center justify-center w-full h-full m-auto md:flex-row md:p-0">
       <div className="w-full md:w-6/12 flex flex-col gap-3">
@@ -67,7 +79,7 @@ const Login = () => {
               <svg className="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
             </span>
         </div>
-          <p className="form-label text-black">
+          <p className="form-label text-black p-2">
           ユーザー名(メールアドレス)
           </p>
           <input
@@ -75,13 +87,13 @@ const Login = () => {
             className="text-black border border-solid border-[#33333333] w-full p-2"
             id="email"
             placeholder="Enter Email..."
+            autoComplete="new-email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <br />
           {isLogin ? (
             <div className="flex flex-col gap-3">
-              <p className="text-black">
+              <p className="text-black p-2">
               パスワード
               </p>
               <div className="password relative flex items-center">
@@ -89,6 +101,7 @@ const Login = () => {
                   type={isPasswordShow ? "text" : "password"}
                   className="text-black border border-solid border-[#33333333] w-full p-2"
                   id="password"
+                  autoComplete="new-password"
                   placeholder="Enter password..."
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -98,40 +111,51 @@ const Login = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              <p className="text-black border border-solid border-[#33333333] w-full p-2">
-              パスワード
-              </p>
-              <div className="password relative flex items-center">
-                <input
-                  type={isPasswordShow ? "text" : "password"}
+              <div className="flex flex-col gap-3">
+                <p className="text-black w-full p-2">
+                  電話番号
+                </p>
+                <input 
+                  type="text" 
                   className="text-black border border-solid border-[#33333333] w-full p-2"
-                  id="password"
-                  placeholder="Enter password..."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={telNumber}
+                  onChange={(e) => setTelNumber(e.target.value)}
                 />
-                <img className="absolute right-1" src={isPasswordShow ? "/assets/img/eye_off.png" : "/assets/img/eye.png"} onClick={handlePassShow} alt="eye" />
               </div>
-              <br />
-              <p className="text-black border border-solid border-[#33333333] w-full p-2">
-              パスワード（確認用）
-              </p>
-              <div className="password relative flex items-center">
-                <input
-                  type={isPasswordShow ? "text" : "password"}
-                  className="text-black border border-solid border-[#33333333] w-full p-2"
-                  id="password"
-                  placeholder="Enter password..."
-                  value={password_confirm}
-                  onChange={(e) => setPasswordConfirm(e.target.value)}
-                />
-                <img className="absolute right-1" src={isPasswordShow ? "/assets/img/eye_off.png" : "/assets/img/eye.png"} onClick={handlePassShow} alt="eye" />
+              <div className="flex flex-col gap-3">
+                <p className="text-black w-full p-2">
+                パスワード
+                </p>
+                <div className="password relative flex items-center">
+                  <input
+                    type={isPasswordShow ? "text" : "password"}
+                    className="text-black border border-solid border-[#33333333] w-full p-2"
+                    id="password"
+                    autoComplete="new-password"
+                    placeholder="Enter password..."
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <img className="absolute right-1" src={isPasswordShow ? "/assets/img/eye_off.png" : "/assets/img/eye.png"} onClick={handlePassShow} alt="eye" />
+                </div>
+                <p className="text-black w-full p-2">
+                パスワード（確認用）
+                </p>
+                <div className="password relative flex items-center">
+                  <input
+                    type={isPasswordShow ? "text" : "password"}
+                    className="text-black border border-solid border-[#33333333] w-full p-2"
+                    id="password"
+                    placeholder="Enter password..."
+                    value={password_confirm}
+                    onChange={(e) => setPasswordConfirm(e.target.value)}
+                  />
+                  <img className="absolute right-1" src={isPasswordShow ? "/assets/img/eye_off.png" : "/assets/img/eye.png"} onClick={handlePassShow} alt="eye" />
+                </div>
               </div>
             </div>
             
           )}
-          
-          <br />
           {isLogin ? (
             <button onClick={loginBtn} className="text-white w-full bg-[#0EAAF0] p-2 rounded-sm transition duration-500 hover:bg-white hover:text-[#0EAAF0] hover:border hover:border-solid hover:border-[#0EAAF0]">
               ログイン
@@ -142,14 +166,13 @@ const Login = () => {
             </button>
           )}  
           <div className="mb-3 text-black">
-            <br />
             {isLogin ? (
               <h5>
                 はじめてご利用の方 <br/>
                 <br/>
                 <button
                   className="bg-white text-[#0EAAF0] w-full border-solid border border-[#0EAAF0] p-2 rounded-sm transition duration-300 hover:text-white hover:bg-[#0EAAF0] hover:border-none"
-                  onClick={() => setLogin(false)}
+                  onClick={handleResister}
                 >
                   アカウントを作成する
                 </button>
@@ -159,7 +182,7 @@ const Login = () => {
                 アカウントすでにお持ちの方
                 <button
                   className="bg-white text-[#0EAAF0] w-full border-solid border border-[#0EAAF0] p-2 rounded-sm transition duration-300 hover:text-white hover:bg-[#0EAAF0] hover:border-none"
-                  onClick={() => setLogin(true)}
+                  onClick={handleLogin}
                 >
                   ログイン
                 </button>

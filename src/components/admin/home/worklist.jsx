@@ -11,7 +11,9 @@ const WorkAdminList = () => {
   const [carNumber, setCarNumber] = useState(null);
   const [carState, setCarState] = useState(null);
   const [charger, setCharger] = useState("");
+  const [budget , setBudget] = useState(null);
   const [deadline, setDeadline] = useState("");
+  const [title , setTitle] = useState("");
   const [userName , setUserName] = useState("");
   const [isEdit , setIsEdit] = useState(true);
   const [jobId , setJobId] = useState(null);
@@ -37,8 +39,10 @@ const WorkAdminList = () => {
         setCarNumber(res.data.car_number),
         setCharger(res.data.charger),
         setDeadline(res.data.deadline),
+        setBudget(res.data.budget),
         setCarState(res.data.status),
-        setUserName(res.data.user.name)
+        setUserName(res.data.user.name),
+        setTitle(res.data.title)
       })
       .catch(err => {
         console.log(err);
@@ -64,6 +68,8 @@ const WorkAdminList = () => {
     if(carNumber) payload['car_number'] = carNumber;
     if(deadline) payload['deadline'] = deadline;
     if(charger) payload['charger'] = charger;
+    if(budget) payload['budget'] = budget;
+    if(title) payload['title'] = title;
     
     axiosTokenApi.put("/api/job/jobs/" , payload);
     
@@ -78,9 +84,10 @@ const WorkAdminList = () => {
         <table className="w-full">
           <thead>
             <tr>
-              <th>車名称</th>
+              <th>車番号</th>
               <th>顧客名</th>
               <th>担当者名</th>
+              <th>工程</th>
               <th>ステータス</th>
               <th>見積額</th>
               <th>締切日</th>
@@ -89,11 +96,12 @@ const WorkAdminList = () => {
           <tbody>
             {jobs.map((job, index) => (
               <tr className="cursor-pointer" key={index} onClick={() =>{openJobDetail(job.id)}}>
-                <td>車番号{job.car_number}</td>
+                <td>{job.car_number}</td>
                 <td>{job.user.name}</td>
                 <td>{job.charger}</td>
+                <td>{job.title}</td>
                 <td>{STATUS_LIST[job.status - 1]}</td>
-                <td>{job.price}</td>
+                <td>{job.budget}</td>
                 <td>{job.deadline}</td>
               </tr>
             ))}
@@ -132,8 +140,21 @@ const WorkAdminList = () => {
                 車番号{carNumber}
               </p>
               :
-              <input type="text" value={carNumber} onChange={(e) => setCarNumber(e.target.value)}/>
+              <input type="text" className=" w-6/12" value={carNumber} onChange={(e) => setCarNumber(e.target.value)}/>
               
+            }
+          </li>
+          <li className="flex">
+            <p className="w-5/12">
+              工程
+            </p>
+            {
+              isEdit ?
+              <p>
+                {title}
+              </p>
+              :
+              <input type="text" className=" w-6/12" value={title} onChange={(e) => setTitle(e.target.value)} />
             }
           </li>
           <li className="flex">
@@ -146,7 +167,7 @@ const WorkAdminList = () => {
                 {STATUS_LIST[carState - 1]}
               </p>
               :
-              <select name="" id="" onChange={(e) => setCarState(e.target.value)}>
+              <select className="border border-solid border-[#33333333] w-6/12 p-1" onChange={(e) => setCarState(e.target.value)}>
                 {STATUS_LIST.map((STATUS, index) => (
                       <option key={`statys_option${index}`} selected={carState === (index+1) ? true : false} value={index+1}>{STATUS}</option>
                 ))}
@@ -163,7 +184,20 @@ const WorkAdminList = () => {
                 {charger}
               </p>
               :
-              <input type="text" value={charger} onChange={(e) => setCharger(e.target.value)} />
+              <input type="text" className=" w-6/12" value={charger} onChange={(e) => setCharger(e.target.value)} />
+            }
+          </li>
+          <li className="flex">
+            <p className="w-5/12">
+            見積額	
+            </p>
+            {
+              isEdit ?
+              <p>
+                {budget}
+              </p>
+              :
+              <input type="text" className=" w-6/12" value={budget} onChange={(e) => setBudget(e.target.value)} />
             }
           </li>
           <li className="flex">
@@ -176,7 +210,7 @@ const WorkAdminList = () => {
                 {deadline}
               </p>
               :
-              <input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
+              <input type="date" className=" w-6/12" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
             }
           </li>
           {isEdit ? 

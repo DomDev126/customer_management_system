@@ -20,6 +20,8 @@ const ClientList = () => {
   const [addStatus , setAddStatus] = useState("");
   const [addDate , setAddDate] = useState("")
   const [addCharger , setAddCharger] = useState("");
+  const [addTitle , setAddTitle] = useState("");
+  const [addBudget , setAddBudget] = useState("");
 
   useEffect(() => {
     getProfile();
@@ -81,7 +83,9 @@ const ClientList = () => {
         car_number : addCarnumber,
         status : addStatus,
         deadline : addDate,
-        charger : addCharger
+        charger : addCharger,
+        title : addTitle,
+        budget : addBudget
       })
       .then(() => {
         getProfile()
@@ -135,6 +139,8 @@ const ClientList = () => {
           title={<p className="font-semibold text-2xl">顧客詳細</p>}
           centered
           open={openModal}
+          className="max-w-[700px]"
+          width={'95vw'}
           onOk={handleOk}
           onCancel={handleCancel}
         >
@@ -201,13 +207,19 @@ const ClientList = () => {
                 <li className="w-2/12 font-bold">
                   車番号
                 </li>
-                <li className="w-3/12 font-bold">
+                <li className="w-2/12 font-bold">
                  担当者
+                </li>
+                <li className="w-3/12 font-bold">
+                  工程
                 </li>
                 <li className="w-4/12 font-bold">
                   ステータス
                 </li>
                 <li className="w-3/12 font-bold">
+                  見積額
+                </li>
+                <li className="w-4/12 font-bold">
                  締切日
                 </li>
               </ul>
@@ -216,13 +228,19 @@ const ClientList = () => {
                   <li className="w-2/12">
                     {job.car_number}
                   </li>
-                  <li className="w-3/12">
+                  <li className="w-2/12">
                     {job.charger}
+                  </li>
+                  <li className="w-3/12">
+                    {job.title}
                   </li>
                   <li className="w-4/12">
                     {STATUS_LIST[job.status - 1]}
                   </li>
                   <li className="w-3/12">
+                    {job.budget}
+                  </li>
+                  <li className="w-4/12">
                     {job.deadline}
                   </li>
                 </ul>
@@ -234,13 +252,15 @@ const ClientList = () => {
                 :
                 <div className="flex justify-between gap-2">
                   <input type="text" className="w-2/12" onChange={(e) => setAddCarnumber(e.target.value)}/>
-                  <input type="text" className="w-3/12" onChange={(e) => setAddCharger(e.target.value)}/>
-                  <select className="w-4/12" onChange={(e) => setAddStatus(e.target.value)}>
+                  <input type="text" className="w-2/12" onChange={(e) => setAddCharger(e.target.value)}/>
+                  <input type="text" className="w-3/12" onChange={(e) => setAddTitle(e.target.value)}/>
+                  <select className="w-4/12 border border-solid border-[#33333333] p-1" onChange={(e) => setAddStatus(e.target.value)}>
                     {STATUS_LIST.map((STATUS, index) => (
                       <option key={`statys_option${index}`} value={index+1}>{STATUS}</option>
                     ))}
                   </select>
-                  <input type="date" className="w-3/12" onChange={(e) => setAddDate(e.target.value)}/>
+                  <input type="date" className="w-3/12" onChange={(e) => setAddBudget(e.target.value)}/>
+                  <input type="date" className="w-4/12" onChange={(e) => setAddDate(e.target.value)}/>
                 </div>
               }
               
