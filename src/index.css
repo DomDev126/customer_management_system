@@ -51,6 +51,31 @@ input{
 :where(.css-dev-only-do-not-override-1qhpsh8).ant-btn-primary{
   background-color: #1677ff;
 }
+
+
+
+*::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+*::-webkit-scrollbar-track {
+  --bg-opacity: 1;
+  background-color: #FBF1E5;
+}
+
+*::-webkit-scrollbar-thumb {
+  --bg-opacity: 1;
+  border-color: #573001;
+  background-color: #0008;
+  border-radius: 0.25rem;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 0.25rem;
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

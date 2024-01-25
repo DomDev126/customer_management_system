@@ -43,7 +43,7 @@ const Worklist = () => {
 					const documentData = doc.data();
 					if (documentData.unreadCount) {
 						setJobs(prevJobs => prevJobs.map(job => (
-							parseInt(job.id) === parseInt(doc.id) ? { ...job, isUnread: true } : job
+							parseInt(job.id) === parseInt(doc.id) ? { ...job, isUnread: true } : { ...job, isUnread: false }
 						)));
 					}
 				});
@@ -167,6 +167,7 @@ const Worklist = () => {
 			.get("api/job/job_detail/", { params: { job_id: jobId } })
 			.then(res => {
 				setSelectedJob(res.data);
+				signMessages();
 			})
 			.catch(err => {
 				console.log(err);
@@ -230,7 +231,7 @@ const Worklist = () => {
 												</div>
 												<div className="relative mt-6 flex-1 px-4 sm:px-6">
 													<div>
-														<ul>
+														<ul className="border border-solid border-[#33333370] rounded-md p-2">
 															<li className="flex"><p className="w-6/12"> 車番号: </p>{selectedJob ? selectedJob.car_number : ''}</li>
 															<li className="flex"><p className="w-6/12"> ステータス: </p>{selectedJob ? STATUS_LIST[selectedJob.status - 1] : ''}</li>
 															<li className="flex"><p className="w-6/12"> 工程: </p>{selectedJob ? selectedJob.title : ''}</li>
@@ -258,7 +259,7 @@ const Worklist = () => {
 															問い合わせ
 														</h3>
 														<div className="relative">
-															<div className="bg-[#33333320] rounded-xl flex flex-col gap-5 p-3 h-[500px] overflow-y-auto scroll-smooth">
+															<div className="bg-[#33333320] rounded-xl flex flex-col gap-3 p-3 h-[500px] overflow-y-auto scroll-smooth pb-20 scrollwidth">
 																{messages && messages.map((message, index) => (
 																	<div
 																		key={`message_${index}`}
@@ -279,7 +280,7 @@ const Worklist = () => {
 																	</div>
 																))}
 															</div>
-															<div className="absolute bottom-2 left-2 bg-white p-2 w-full flex justify-between items-center rounded-3xl w-[calc(100%-32px)]">
+															<div className="absolute bottom-2 left-2 bg-white p-2 w-[95%] flex justify-between items-center rounded-3xl">
 																<input
 																	type="text"
 																	className="w-9/12 outline-none border-none text-[18px]"

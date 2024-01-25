@@ -11,17 +11,24 @@ const customStyles = {
 		bottom: 'auto',
 		marginRight: '-50%',
 		transform: 'translate(-50%, -50%)',
-		width: '50vw',
+		width: '90vw',
 		padding: '3rem',
+		maxWidth: '800px'
 	},
 };
 
 const Profile = () => {
 
 	const [name, setName] = useState("");
+	const [isValidName, setIsValidName] = useState(true);
+	const [nameError, setNameError] = useState('');
 	const [email, setEmail] = useState("");
+	const [isValidEmail, setIsValidEmail] = useState(true);
+	const [emailError, setEmailError] = useState('');
 	const [address, setAddress] = useState("");
 	const [tel, setTel] = useState("");
+	const [isValidTel, setIsValidTel] = useState(true);
+	const [telError, setTelError] = useState('');
 	const [modalIsOpen, setIsOpen] = useState(false);
 
 	useEffect(() => {
@@ -54,6 +61,7 @@ const Profile = () => {
 
 	function closeModal() {
 		setIsOpen(false);
+		getProfile();
 	}
 
 	const handleProfileUpdate = () => {
@@ -65,20 +73,44 @@ const Profile = () => {
 				address: address
 			})
 			.then(() => {
+				setIsOpen(false);
 				getProfile();
 			})
 			.catch((err) => {
-				console.log(err);
+				const ret = err.response.data;
+				
+				if(ret.email) {
+					setEmailError(ret.email);
+					setIsValidEmail(false);
+				} else{
+					setEmailError('');
+					setIsValidEmail(true);
+				}
+
+				if(ret.name) {
+					setNameError(ret.name);
+					setIsValidName(false);
+				} else{
+					setNameError('');
+					setIsValidName(true);
+				}
+
+				if(ret.tel) {
+					setTelError(ret.tel);
+					setIsValidTel(false);
+				} else{
+					setTelError('');
+					setIsValidTel(true);
+				}
 			})
-		setIsOpen(false);
 	}
 
 	return (
-		<div className="w-full md:w-[48%] relative">
+		<div className="w-full md:w-[65%] lg:w-[48%] relative">
 			<h2 className="text-right text-[24px] font-semibold">
 			プロフィール
 			</h2>
-			<div className="relative w-full p-10 pt-20 border border-solid border-[#33333333] rounded-xl flex flex-col gap-5">
+			<div className="relative w-full p-5 sm:p-10 pt-20 border border-solid border-[#33333333] rounded-xl flex flex-col gap-5">
 				<div className="flex gap-6 items-center border-b border-solid border-[#33333333]">
 					<p className="w-6/12">
 						名前
@@ -121,45 +153,63 @@ const Profile = () => {
 						onRequestClose={closeModal}
 						style={customStyles}
 						contentLabel="ProfileUpdate Modal"
+						
 					>
-						<h2 className="text-4xl mb-6" ref={(_subtitle) => (subtitle = _subtitle)}>プロファイルの編集</h2>
+						<h2 className="text-2xl mb-10 sm:mb-20 sm:text-4xl" ref={(_subtitle) => (subtitle = _subtitle)}>プロファイルの編集</h2>
 						<div className="flex flex-col gap-4">
-							<div className="flex items-center">
-								<p className="w-6/12">名前</p>
-								<input type="text"
-									required
-									className="border border-solid border-[#33333333] p-2 text-[14px] w-6/12"
-									value={name}
-									onChange={(e) => setName(e.target.value)}
-								/>
+							<div className="flex">
+								<p className="w-1/3">名前</p>
+								<div className="w-2/3">
+									<input type="text"
+										required
+										className="border border-solid border-[#33333333] p-2 text-[14px] w-full"
+										value={name}
+										onChange={(e) => setName(e.target.value)}
+									/>
+									{isValidName === false &&
+										<p className='pl-2 text-xs text-red-500'>{nameError}</p>
+									}
+								</div>
 							</div>
-							<div className="flex items-center">
-								<p className="w-6/12">メールアドレス</p>
-								<input type="email"
-									required
-									className="border border-solid border-[#33333333] p-2 text-[14px] w-6/12"
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
-								/>
+							<div className="flex">
+								<p className="w-1/3">メールアドレス</p>
+								<div className="w-2/3">
+									<input type="email"
+										required
+										className="border border-solid border-[#33333333] p-2 text-[14px] w-full"
+										value={email}
+										onChange={(e) => setEmail(e.target.value)}
+									/>
+									{isValidEmail === false &&
+										<p className='pl-2 text-xs text-red-500'>{emailError}</p>
+									}
+								</div>
 							</div>
-							<div className="flex items-center">
-								<p className="w-6/12">住所</p>
-								<input 
-									type="text"
-									className="border border-solid border-[#33333333] p-2 text-[14px] w-6/12"
-									value={address}
-									onChange={(e) => setAddress(e.target.value)}
-								/>
+							<div className="flex">
+								<p className="w-1/3">住所</p>
+								<div className="w-2/3">
+									<input 
+										type="text"
+										className="border border-solid border-[#33333333] p-2 text-[14px] w-full"
+										value={address}
+										onChange={(e) => setAddress(e.target.value)}
+									/>
+								</div>
 							</div>
-							<div className="flex items-center">
-								<p className="w-6/12">電話番号</p>
-								<input
-									type="text"
-									required
-									className="border border-solid border-[#33333333] p-2 text-[14px] w-6/12"
-									value={tel}
-									onChange={(e) => setTel(e.target.value)}
-								/>
+							<div className="flex">
+								<p className="w-1/3">電話番号</p>
+								<div className="w-2/3">
+									<input
+										type="text"
+										required
+										className="border border-solid border-[#33333333] p-2 text-[14px] w-full"
+										value={tel}
+										onChange={(e) => setTel(e.target.value)}
+									/>
+									{isValidTel === false &&
+										<p className='pl-2 text-xs text-red-500'>{telError}</p>
+									}
+								</div>
 							</div>
 						</div>
 						<div className="flex gap-3 justify-center mt-6">

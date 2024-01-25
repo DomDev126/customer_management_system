@@ -8,15 +8,23 @@ const ClientList = () => {
 
   const [users, setUsers] = useState([]);
   const [userName , setUserName] = useState("");
+  const [isValidName , setIsValidName] = useState(true);
+  const [nameError , setNameError] = useState('');
   const [userAddress , setUserAddress] = useState("");
   const [userTel , setUserTel] = useState("");
+  const [isValidTel , setIsValidTel] = useState(true);
+  const [telError , setTelError] = useState('');
   const [userEmail , setUserEmail] = useState("");
+  const [isValidEmail , setIsValidEmail] = useState(true);
+  const [emailError , setEmailError] = useState('');
   const [openModal , setOpenModal] = useState(false);
   const [jobUser , setJobUser] = useState([]);
   const [isEdit , setEdit] = useState(true);
   const [userId , setUserId] = useState("");
   const [addJob , setAddJob] = useState(true);
   const [addCarnumber , setAddCarnumber] = useState("");
+  const [isValidJob , setIsValidJob] = useState(true);
+  const [jobError , setJobError] = useState("");
   const [addStatus , setAddStatus] = useState("");
   const [addDate , setAddDate] = useState("")
   const [addCharger , setAddCharger] = useState("");
@@ -68,12 +76,36 @@ const ClientList = () => {
       })
       .then(() => {
         getProfile();
+        setEdit(true);
       })
       .catch(err => {
-        console.log(err);
+        const ret = err.response.data;
+				
+				if(ret.email) {
+					setEmailError(ret.email);
+					setIsValidEmail(false);
+				} else{
+					setEmailError('');
+					setIsValidEmail(true);
+				}
+
+				if(ret.name) {
+					setNameError(ret.name);
+					setIsValidName(false);
+				} else{
+					setNameError('');
+					setIsValidName(true);
+				}
+
+				if(ret.tel) {
+					setTelError(ret.tel);
+					setIsValidTel(false);
+				} else{
+					setTelError('');
+					setIsValidTel(true);
+				}
       })
     
-    setEdit(true);
   }
 
   const handleAddJob = () => {
@@ -89,32 +121,38 @@ const ClientList = () => {
         budget : addBudget
       })
       .then(() => {
-        getProfile()
+        getProfile();
+        setAddJob(true);
       })
-      .catch(err => {
-        console.log(err);
+      .catch((err) => {
+        const ret = err.response.data;
+
+        if(ret.car_number || ret.title || ret.deadline){
+          setJobError("この項目は空にできません。");
+          setIsValidJob(false);
+        }
       })
     
-    setAddJob(true);
   }
 
-  const handleOk = () => {
-    handleUpdate();
-    handleAddJob();
-    setOpenModal(false);
-  }
   const handleCancel = () => {
     setEdit(true);
     setAddJob(true);
     setOpenModal(false);
+    setIsValidEmail(false);
+    setIsValidEmail(true);
+    setIsValidName(true);
+    setIsValidTel(true);
+    setJobError('');
   }
+
   return(
-    <div className="flex flex-col gap-6 w-[full] lg:w-5/12">
+    <div className="flex flex-col gap-6 w-[90%] 2xl:w-5/12">
       <h3 className="text-3xl font-semibold">
         顧客一覧
       </h3>
-      <div className="w-full">
-        <table className="w-full table-fixed">
+      <div className="w-[90vw] lg:w-full overflow-auto lg:overflow-hidden">
+        <table className="w-[860px] lg:w-full table-fixed">
           <thead>
             <tr>
               <th className="w-[60px]">No</th>
@@ -142,54 +180,71 @@ const ClientList = () => {
           open={openModal}
           className="max-w-[700px]"
           width={'95vw'}
-          onOk={handleOk}
           onCancel={handleCancel}
+          footer={null}
         >
           <div className="border-b border-solid border-b-[#33333333] relative pb-3">
             <ul className="flex flex-col gap-3 mt-5">
               <li className="flex items-center">
-                <p className="w-5/12">
+                <p className="w-1/3">
                   名前
                 </p>
-                {isEdit ? 
-                  <p>{userName} </p>: 
-                  <input value={userName} onChange={(e) => setUserName(e.target.value)} 
-                />}
+                <div className="w-1/2">
+                  {isEdit ? 
+                    <p className="w-full">{userName} </p>: 
+                    <input className="w-full" value={userName} onChange={(e) => setUserName(e.target.value)} 
+                  />}
+                  {isValidName === false &&
+										<p className='pl-2 text-xs text-red-500'>{nameError}</p>
+									}
+                </div>
               </li>
               <li className="flex items-center">
-                <p className="w-5/12">
+                <p className="w-1/3">
                 住所
                 </p>
-                {isEdit ? 
-                  <p>
-                    {userAddress}
-                  </p>  :
-                  <input value={userAddress} onChange={(e) => setUserAddress(e.target.value)} />
-                }
+                <div className="w-1/2">
+                  {isEdit ? 
+                    <p className="w-full">
+                      {userAddress}
+                    </p>  :
+                    <input className="w-full" value={userAddress} onChange={(e) => setUserAddress(e.target.value)} />
+                  }
+
+                </div>
                 
               </li>
               <li className="flex items-center">
-                <p className="w-5/12">
+                <p className="w-1/3">
                 電話番号
                 </p>
-                {isEdit ?
-                  <p>
-                    {userTel}
-                  </p> :
-                  <input value={userTel} onChange={(e) => setUserTel(e.target.value)} />
-                }
-                
+                <div className="w-1/2">
+                  {isEdit ?
+                    <p className="w-full">
+                      {userTel}
+                    </p> :
+                    <input className="w-full" value={userTel} onChange={(e) => setUserTel(e.target.value)} />
+                  }
+                  {isValidTel === false &&
+										<p className='pl-2 text-xs text-red-500'>{telError}</p>
+									}
+                </div>
               </li>
               <li className="flex items-center">
-                <p className="w-5/12">
+                <p className="w-1/3">
                 メールアドレス
                 </p>
-                {isEdit ?
-                  <p>
-                    {userEmail}
-                  </p> :
-                  <input value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
-                }
+                <div className="w-1/2">
+                  {isEdit ?
+                    <p className="w-full">
+                      {userEmail}
+                    </p> :
+                    <input className="w-full" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
+                  }
+                  {isValidEmail === false &&
+										<p className='pl-2 text-xs text-red-500'>{emailError}</p>
+									}
+                </div>
                 
               </li>
             </ul>
@@ -251,17 +306,22 @@ const ClientList = () => {
                   
                 </div>
                 :
-                <div className="flex justify-between gap-1">
-                  <input type="text" className="w-2/12" onChange={(e) => setAddCarnumber(e.target.value)}/>
-                  <input type="text" className="w-2/12" onChange={(e) => setAddCharger(e.target.value)}/>
-                  <input type="text" className="w-3/12" onChange={(e) => setAddTitle(e.target.value)}/>
-                  <select className="w-4/12 border border-solid border-[#33333333] p-1" onChange={(e) => setAddStatus(e.target.value)}>
-                    {STATUS_LIST.map((STATUS, index) => (
-                      <option key={`statys_option${index}`} value={index+1}>{STATUS}</option>
-                    ))}
-                  </select>
-                  <input type="date" className="w-3/12" onChange={(e) => setAddBudget(e.target.value)}/>
-                  <input type="date" className="w-4/12" onChange={(e) => setAddDate(e.target.value)}/>
+                <div>
+                  <div className="flex justify-between gap-1">
+                    <input type="text" className="w-2/12" onChange={(e) => setAddCarnumber(e.target.value)}/>
+                    <input type="text" className="w-2/12" onChange={(e) => setAddCharger(e.target.value)}/>
+                    <input type="text" className="w-3/12" onChange={(e) => setAddTitle(e.target.value)}/>
+                    <select className="w-4/12 border border-solid border-[#33333333] p-1" onChange={(e) => setAddStatus(e.target.value)}>
+                      {STATUS_LIST.map((STATUS, index) => (
+                        <option key={`statys_option${index}`} value={index+1}>{STATUS}</option>
+                      ))}
+                    </select>
+                    <input type="text" className="text-end w-3/12" onChange={(e) => setAddBudget(e.target.value)}/>
+                    <input type="date" className="w-4/12" onChange={(e) => setAddDate(e.target.value)}/>
+                  </div>
+                  {isValidJob === false &&
+                    <p className='pl-2 text-xs text-red-500'>{jobError}</p>
+                  }
                 </div>
               }
               

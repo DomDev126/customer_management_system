@@ -56,7 +56,7 @@ const WorkAdminList = () => {
 					const documentData = doc.data();
 					if (documentData.unreadCount) {
 						setJobs(prevJobs => prevJobs.map(job => (
-							parseInt(job.id) === parseInt(doc.id) ? { ...job, isUnread: true } : job
+							parseInt(job.id) === parseInt(doc.id) ? { ...job, isUnread: true } : { ...job, isUnread: false }
 						)));
 					}
 				});
@@ -173,11 +173,12 @@ const WorkAdminList = () => {
 		);
 	}
 
-  const openJobDetail = (jobId) => {
+  const openJobDetail = (_jobId) => {
+    setIsEdit(true);
     setOpen(true);
-    setJobId(jobId);
+    setJobId(_jobId);
     axiosTokenApi
-      .get("api/job/job_detail/", { params: { job_id: jobId } })
+      .get("api/job/job_detail/", { params: { job_id: _jobId } })
       .then(res => {
         setCarNumber(res.data.car_number);
         setCharger(res.data.charger);
@@ -189,6 +190,7 @@ const WorkAdminList = () => {
         setOriginalImageUrl(res.data.original_image_url);
         setResultImageUrl(res.data.result_image_url);
         setUserId(res.data.user.id);
+        signMessages();
       })
       .catch(err => {
         console.log(err);
@@ -210,25 +212,29 @@ const WorkAdminList = () => {
     if (originalFile) payload['original_image_url'] = originalFile;
     if (resultFile) payload['result_image_url'] = resultFile;
 
-    axiosTokenApi.put(
-      "/api/job/jobs/", 
-      payload,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
+    axiosTokenApi
+      .put(
+        "/api/job/jobs/", 
+        payload,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+      .then(() => {
+        openJobDetail(jobId);
+      });
 
     setIsEdit(true);
   }
   return (
-    <div className="flex flex-col gap-6 w-full lg:w-7/12">
+    <div className="flex flex-col gap-6 w-[90%] 2xl:w-7/12">
       <h3 className="text-3xl font-semibold">
         作業一覧
       </h3>
-      <div className="w-full">
-        <table className="w-full table-fixed">
+      <div className="w-[90vw] lg:w-full overflow-auto lg:overflow-hidden">
+        <table className="w-[860px] lg:w-full table-fixed">
           <thead>
             <tr>
               <th>車番号</th>
@@ -243,7 +249,12 @@ const WorkAdminList = () => {
           <tbody>
             {jobs.map((job, index) => (
               <tr className="cursor-pointer" key={index} onClick={() => { openJobDetail(job.id) }}>
-                <td>{job.car_number}</td>
+                <td className="relative">
+                  {job.car_number}
+                  {job.isUnread &&
+                    <span className="absolute right-0 top-1 w-3 h-3 rounded-full bg-red-500"></span>
+                  }
+                </td>
                 <td>{job.user.name}</td>
                 <td>{job.charger}</td>
                 <td>{job.title}</td>
@@ -298,7 +309,7 @@ const WorkAdminList = () => {
                       </div>
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
                         <div>
-                          <ul className="relative pt-10 flex flex-col gap-3">
+                          <ul className="relative flex flex-col gap-3 border border-solid border-[#33333370] rounded-md p-2">
                             <li className="flex">
                               <p className="w-5/12">
                                 顧客名
@@ -373,7 +384,7 @@ const WorkAdminList = () => {
                                     {budget}
                                   </p>
                                   :
-                                  <input type="text" className=" w-6/12" value={budget} onChange={(e) => setBudget(e.target.value)} />
+                                  <input type="text" className="text-end w-6/12" value={budget} onChange={(e) => setBudget(e.target.value)} />
                               }
                             </li>
                             <li className="flex">
@@ -390,16 +401,16 @@ const WorkAdminList = () => {
                               }
                             </li>
                             {isEdit ?
-                              <button className="absolute -top-3 right-6 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={() => setIsEdit(false)}>編集</button>
+                              <button className="absolute -top-14 right-8 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={() => setIsEdit(false)}>編集</button>
                               :
-                              <button className="absolute -top-3 right-6 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={handleUpdate}>保存</button>
+                              <button className="absolute -top-14 right-8 bg-[#1677ff] text-white text-lg p-1 px-3" onClick={handleUpdate}>保存</button>
                             }
                           </ul>
                           <div className="border border-slate-400 flex flex-col justify-center items-start mt-4 p-4 rounded">
                             <p className="pb-2 text-lg">作業前画像</p>
                             {isEdit ? 
                               ((originalImageUrl) ?
-                                <img className="object-cover w-full aspect-square rounded" src={originalImageUrl} alt="Origin" /> :
+                                <img className=" w-full rounded" src={originalImageUrl} alt="Origin" /> :
                                 <p className="pl-6">画像ない</p>
                               ):
                               <ImageInput defaultAvatar={originalImageUrl} onUpload={setOriginalFile} />
@@ -409,7 +420,7 @@ const WorkAdminList = () => {
                             <p className="pb-2 text-lg">作業後画像</p>
                             {isEdit ? 
                               ((resultImageUrl) ?
-                                <img className="object-cover w-full aspect-square rounded" src={resultImageUrl} alt="Origin" /> :
+                                <img className=" w-full rounded" src={resultImageUrl} alt="Result" /> :
                                 <p className="pl-6">画像ない</p>
                               ):
                               <ImageInput defaultAvatar={resultImageUrl} onUpload={setResultFile} />
@@ -421,7 +432,7 @@ const WorkAdminList = () => {
                             問い合わせ
                           </h3>
                           <div className="relative">
-                            <div className="bg-[#33333320] rounded-xl flex flex-col gap-5 p-3 h-[500px] overflow-y-auto scroll-smooth">
+                            <div className="bg-[#33333320] rounded-xl flex flex-col gap-3 p-3 pb-20 h-[500px] overflow-y-auto scroll-smooth">
                               {messages && messages.map((message, index) => (
                                 <div
                                   key={`message_${index}`}
@@ -442,7 +453,7 @@ const WorkAdminList = () => {
                                 </div>
                               ))}
                             </div>
-                            <div className="absolute bottom-2 left-2 bg-white p-2 w-full flex justify-between items-center rounded-3xl w-[calc(100%-32px)]">
+                            <div className="absolute bottom-2 left-2 bg-white p-2 w-[95%] flex justify-between items-center rounded-3xl">
                               <input
                                 type="text"
                                 className="w-9/12 outline-none border-none text-[18px]"
