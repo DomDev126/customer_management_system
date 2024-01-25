@@ -109,17 +109,17 @@ const ClientList = () => {
     setOpenModal(false);
   }
   return(
-    <div className="flex flex-col gap-6 w-[90%] lg:w-5/12">
+    <div className="flex flex-col gap-6 w-[full] lg:w-5/12">
       <h3 className="text-3xl font-semibold">
         顧客一覧
       </h3>
       <div className="w-full">
-        <table className="w-full">
+        <table className="w-full table-fixed">
           <thead>
             <tr>
-              <th>No</th>
+              <th className="w-[60px]">No</th>
+              <th>Eメール</th>
               <th>名前</th>
-              <th>住所</th>
               <th>電話番号</th>
               <th>登録日</th>
             </tr>
@@ -128,8 +128,8 @@ const ClientList = () => {
             {users.map((user, index) => (
               <tr className="cursor-pointer" key={index} onClick={() => {userDetail(user.id)}}>
                 <td>{index+1}</td>
+                <td>{user.email}</td>
                 <td>{user.name}</td>
-                <td>{user.address}</td>
                 <td>{user.tel}</td>
                 <td>{moment(user.created_at).format("YYYY-MM-DD")}</td>
               </tr>

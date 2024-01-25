@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { axiosTokenApi } from "../../../utils/axios";
 import { STATUS_LIST } from "../../../utils/const";
 import { db } from "../../../firebase";
-import { addDoc, collection, doc, increment, onSnapshot, query, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, increment, onSnapshot, orderBy, query, setDoc } from "firebase/firestore";
 import { useAuth } from "../../../context/AuthContext";
 import { IoSend } from "react-icons/io5";
 
@@ -42,8 +42,8 @@ const Worklist = () => {
 				snapshot.forEach((doc) => {
 					const documentData = doc.data();
 					if (documentData.unreadCount) {
-						setJobs(jobs.map(job => (
-							job.id === doc.id ? { ...job, isUnread: true } : job
+						setJobs(prevJobs => prevJobs.map(job => (
+							parseInt(job.id) === parseInt(doc.id) ? { ...job, isUnread: true } : job
 						)));
 					}
 				});
@@ -53,7 +53,7 @@ const Worklist = () => {
 		return () => {
 			unSubscribe();
 		};
-	}, [auth, jobs])
+	}, [auth])
 
 	useEffect(() => {
 		if (selectedJob) {
@@ -67,6 +67,7 @@ const Worklist = () => {
 						String(selectedJob.id),
 						"messages"
 					),
+					orderBy("timestamp")
 				),
 				(snapshot) => {
 					setMessages(
@@ -256,30 +257,29 @@ const Worklist = () => {
 														<h3 className="text-left text-base font-bold py-4">
 															問い合わせ
 														</h3>
-														<div className=" bg-[#33333320] rounded-xl flex flex-col gap-5 p-3">
-															<div className="chat flex flex-col gap-4 h-[300px]">
+														<div className="relative">
+															<div className="bg-[#33333320] rounded-xl flex flex-col gap-5 p-3 h-[500px] overflow-y-auto scroll-smooth">
 																{messages && messages.map((message, index) => (
-																	<div 
-																		key={`message_${index}`} 
+																	<div
+																		key={`message_${index}`}
 																		className={`
 																			flex 
-																			${message.isAdmin ? 'flex-row-reverse' : 'flex-row'}
+																			${message.isAdmin ? 'justify-end' : 'justify-start'}
+																		`}
+																	>
+																		<p className={`
 																			${message.isAdmin ? 'bg-green-100' : 'bg-white'}
-																			w-3/4
-																			md:2/3
-																			rounded-lg
 																			shadow
+																			rounded-lg
 																			px-3
 																			py-1
 																			text-black
 																			text-[18px]
-																		`}
-																	>
-																		{message.content}
+																		`}>{message.content}</p>
 																	</div>
 																))}
 															</div>
-															<div className="bg-white p-2 w-full flex justify-between items-center rounded-3xl">
+															<div className="absolute bottom-2 left-2 bg-white p-2 w-full flex justify-between items-center rounded-3xl w-[calc(100%-32px)]">
 																<input
 																	type="text"
 																	className="w-9/12 outline-none border-none text-[18px]"
@@ -287,7 +287,6 @@ const Worklist = () => {
 																	onChange={(e) => (setChatMessage(e.target.value))}
 																/>
 																<IoSend 
-																	disable
 																	className= {`cursor-pointer hover:scale-125`}
 																	onClick={() => (sendMessage())}
 																/>
