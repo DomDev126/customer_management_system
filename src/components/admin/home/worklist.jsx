@@ -31,14 +31,7 @@ const WorkAdminList = () => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    axiosTokenApi
-      .get("/api/job/jobs/")
-      .then(res => {
-        setJobs(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    getJobList();
   }, [])
 
 	useEffect(() => {
@@ -51,15 +44,19 @@ const WorkAdminList = () => {
 					"jobs",
 				),
 			),
-			(snapshot) => {
-				snapshot.forEach((doc) => {
-					const documentData = doc.data();
-					if (documentData.unreadCount) {
-						setJobs(prevJobs => prevJobs.map(job => (
-							parseInt(job.id) === parseInt(doc.id) ? { ...job, isUnread: true } : { ...job, isUnread: false }
-						)));
-					}
-				});
+			async (snapshot) => {
+        const res = await axiosTokenApi.get("/api/job/jobs/");
+        let _jobs = res.data.map(job => {
+          let isUnread = false;
+          snapshot.forEach(doc => {
+            const documentData = doc.data()
+            if(documentData.unreadCount && parseInt(job.id) === parseInt(doc.id)) {
+              isUnread = true;
+            }
+          })
+          return { ...job, isUnread: isUnread }
+        });
+        setJobs(_jobs);
 			}
 		);
 
@@ -67,6 +64,7 @@ const WorkAdminList = () => {
 			unSubscribe();
 		};
 	}, [auth])
+
 
 	useEffect(() => {
 		if (jobId) {
@@ -101,6 +99,17 @@ const WorkAdminList = () => {
 			};
 		}
 	}, [auth, jobId]);
+
+  const getJobList = () => {
+    axiosTokenApi
+      .get("/api/job/jobs/")
+      .then(res => {
+        setJobs(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
 	const sendMessage = async () => {
 		if (chatMessage === "") {
@@ -188,7 +197,9 @@ const WorkAdminList = () => {
         setUserName(res.data.user.name);
         setTitle(res.data.title);
         setOriginalImageUrl(res.data.original_image_url);
+        setOriginalFile(null);
         setResultImageUrl(res.data.result_image_url);
+        setResultFile(null);
         setUserId(res.data.user.id);
         signMessages();
       })
@@ -224,6 +235,7 @@ const WorkAdminList = () => {
       )
       .then(() => {
         openJobDetail(jobId);
+        getJobList();
       });
 
     setIsEdit(true);
@@ -461,7 +473,6 @@ const WorkAdminList = () => {
                                 onChange={(e) => (setChatMessage(e.target.value))}
                               />
                               <IoSend
-                                disable
                                 className={`cursor-pointer hover:scale-125`}
                                 onClick={() => (sendMessage())}
                               />

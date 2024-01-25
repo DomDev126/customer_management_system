@@ -38,15 +38,19 @@ const Worklist = () => {
 					"jobs",
 				),
 			),
-			(snapshot) => {
-				snapshot.forEach((doc) => {
-					const documentData = doc.data();
-					if (documentData.unreadCount) {
-						setJobs(prevJobs => prevJobs.map(job => (
-							parseInt(job.id) === parseInt(doc.id) ? { ...job, isUnread: true } : { ...job, isUnread: false }
-						)));
-					}
-				});
+			async (snapshot) => {
+				const res = await axiosTokenApi.get("/api/job/user_jobs/");
+				let _jobs = res.data.map(job => {
+          let isUnread = false;
+          snapshot.forEach(doc => {
+            const documentData = doc.data()
+            if(documentData.unreadCount && parseInt(job.id) === parseInt(doc.id)) {
+              isUnread = true;
+            }
+          })
+          return { ...job, isUnread: isUnread }
+        });
+        setJobs(_jobs);
 			}
 		);
 
