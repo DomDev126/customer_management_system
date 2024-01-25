@@ -122,7 +122,7 @@ const Profile = () => {
 						style={customStyles}
 						contentLabel="ProfileUpdate Modal"
 					>
-						<h2 className="text-4xl mb-6" ref={(_subtitle) => (subtitle = _subtitle)}>Edit Profile</h2>
+						<h2 className="text-4xl mb-6" ref={(_subtitle) => (subtitle = _subtitle)}>プロファイルの編集</h2>
 						<div className="flex flex-col gap-4">
 							<div className="flex items-center">
 								<p className="w-6/12">名前</p>

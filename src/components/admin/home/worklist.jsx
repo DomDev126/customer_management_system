@@ -137,7 +137,7 @@ const WorkAdminList = () => {
             </p>
             {isEdit ?
               <p>
-                車番号{carNumber}
+                {carNumber}
               </p>
               :
               <input type="text" className=" w-6/12" value={carNumber} onChange={(e) => setCarNumber(e.target.value)}/>
@@ -189,7 +189,7 @@ const WorkAdminList = () => {
           </li>
           <li className="flex">
             <p className="w-5/12">
-            見積額	
+            見積もり
             </p>
             {
               isEdit ?
