@@ -109,7 +109,6 @@ const ClientList = () => {
   }
 
   const handleAddJob = () => {
-    console.log(addStatus);
     axiosTokenApi
       .post("api/job/jobs/" , {
         user : userId,
