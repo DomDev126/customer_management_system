@@ -214,10 +214,10 @@ const Profile = () => {
 						</div>
 						<div className="flex gap-3 justify-center mt-6">
 							<button onClick={handleProfileUpdate} className="bg-[#0EAAF0] text-white font-medium text-[18px] w-28">
-								OK
+								はい
 							</button>
 							<button className="bg-[#e27d7d] text-white font-medium text-[18px] w-28" onClick={closeModal}>
-								Close
+								いいえ
 							</button>
 						</div>
 					</Modal>
