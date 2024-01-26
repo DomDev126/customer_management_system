@@ -12,11 +12,10 @@ const Login = () => {
   const [isErrLength , setErrLength] = useState(false);
   const [isErrSame , setErrSame] = useState(false);
   const navigate = useNavigate();
+  const [isPasswordShow, setIsPasswordShow] = useState(false);
 
   const auth = useAuth();
 
-  //   For Registration Only
-  const [isPasswordShow, setIsPasswordShow] = useState(false);
 
   const loginBtn = async () => {
     const loginResult = await auth.signin({

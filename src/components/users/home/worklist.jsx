@@ -246,14 +246,14 @@ const Worklist = () => {
 														<div className="border border-slate-400 flex flex-col justify-center items-start mt-4 p-4 rounded">
 															<p className="pb-2 text-lg">作業前画像</p>
 															{(selectedJob && selectedJob.original_image_url) ?
-																<img className="object-cover w-full aspect-square rounded" src={selectedJob.original_image_url} alt="Origin" /> :
+																<img className=" w-full rounded" src={selectedJob.original_image_url} alt="Origin" /> :
 																<p className="pl-6">画像ない</p>
 															}
 														</div>
 														<div className="border border-slate-400 flex flex-col justify-center items-start mt-4 p-4 rounded">
 															<p className="pb-2 text-lg">作業後画像</p>
 															{(selectedJob && selectedJob.result_image_url) ?
-																<img className="object-cover w-full aspect-square rounded" src={selectedJob.result_image_url} alt="Result" /> :
+																<img className=" w-full rounded" src={selectedJob.result_image_url} alt="Result" /> :
 																<p className="pl-6">画像ない</p>
 															}
 														</div>
