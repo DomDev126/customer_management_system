@@ -61,6 +61,9 @@ const Profile = () => {
 
 	function closeModal() {
 		setIsOpen(false);
+		setNameError("");
+		setEmailError("");
+		setTelError("");
 		getProfile();
 	}
 
@@ -74,6 +77,9 @@ const Profile = () => {
 			})
 			.then(() => {
 				setIsOpen(false);
+				setNameError("");
+				setEmailError("");
+				setTelError("");
 				getProfile();
 			})
 			.catch((err) => {

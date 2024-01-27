@@ -77,6 +77,9 @@ const ClientList = () => {
       .then(() => {
         getProfile();
         setEdit(true);
+        setEmailError("");
+        setNameError("");
+        setTelError("");
       })
       .catch(err => {
         const ret = err.response.data;
