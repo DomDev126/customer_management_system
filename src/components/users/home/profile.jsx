@@ -161,7 +161,7 @@ const Profile = () => {
 						contentLabel="ProfileUpdate Modal"
 						
 					>
-						<h2 className="text-2xl mb-10 sm:mb-20 sm:text-4xl" ref={(_subtitle) => (subtitle = _subtitle)}>プロファイルの編集</h2>
+						<h2 className="text-2xl mb-10 sm:mb-20 sm:text-4xl" ref={(_subtitle) => (subtitle = _subtitle)}>プロフィールの編集</h2>
 						<div className="flex flex-col gap-4">
 							<div className="flex">
 								<p className="w-1/3">名前</p>
@@ -219,11 +219,11 @@ const Profile = () => {
 							</div>
 						</div>
 						<div className="flex gap-3 justify-center mt-6">
-							<button onClick={handleProfileUpdate} className="bg-[#0EAAF0] text-white font-medium text-[18px] w-28">
-								はい
+							<button onClick={handleProfileUpdate} className="bg-[#0EAAF0] text-white font-medium text-[14px] sm:text-[18px] w-28">
+								保存
 							</button>
-							<button className="bg-[#e27d7d] text-white font-medium text-[18px] w-28" onClick={closeModal}>
-								いいえ
+							<button className="bg-[#e27d7d] text-white font-medium text-[14px] sm:text-[18px] w-40" onClick={closeModal}>
+								キャンセル
 							</button>
 						</div>
 					</Modal>
