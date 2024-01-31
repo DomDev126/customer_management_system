@@ -3,8 +3,9 @@ import { axiosTokenApi } from "../../../utils/axios";
 import moment from 'moment';
 import { STATUS_LIST } from "../../../utils/const";
 import Modal from "antd/es/modal/Modal";
+import PropTypes from 'prop-types';
 
-const ClientList = () => {
+const ClientList = (props) => {
 
   const [users, setUsers] = useState([]);
   const [userName , setUserName] = useState("");
@@ -135,6 +136,8 @@ const ClientList = () => {
         }
       })
     userDetail(userId);
+    
+    props.getJobList()
   }
 
   const handleCancel = () => {
@@ -340,5 +343,9 @@ const ClientList = () => {
     </div>
   )
 }
+
+ClientList.propTypes = {
+  getJobList: PropTypes.any
+};
 
 export default ClientList;

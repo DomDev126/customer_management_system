@@ -7,11 +7,12 @@ import { IoSend } from "react-icons/io5";
 import { useAuth } from "../../../context/AuthContext";
 import { addDoc, collection, doc, increment, onSnapshot, orderBy, query, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
+import PropTypes from 'prop-types';
 
-const WorkAdminList = () => {
+const WorkAdminList = (props) => {
+  const jobs = props.jobs
   const auth = useAuth();
 
-  const [jobs, setJobs] = useState([]);
   const [open, setOpen] = useState(false);
   const [carNumber, setCarNumber] = useState(null);
   const [carState, setCarState] = useState(null);
@@ -30,40 +31,6 @@ const WorkAdminList = () => {
 	const [chatMessage, setChatMessage] = useState('');
   const [userId, setUserId] = useState(null);
 
-  useEffect(() => {
-    getJobList();
-  }, [])
-
-	useEffect(() => {
-		const unSubscribe = onSnapshot(
-			query(
-				collection(
-					db,
-					"users",
-					String("admin"),
-					"jobs",
-				),
-			),
-			async (snapshot) => {
-        const res = await axiosTokenApi.get("/api/job/jobs/");
-        let _jobs = res.data.map(job => {
-          let isUnread = false;
-          snapshot.forEach(doc => {
-            const documentData = doc.data()
-            if(documentData.unreadCount && parseInt(job.id) === parseInt(doc.id)) {
-              isUnread = true;
-            }
-          })
-          return { ...job, isUnread: isUnread }
-        });
-        setJobs(_jobs);
-			}
-		);
-
-		return () => {
-			unSubscribe();
-		};
-	}, [auth])
 
 
 	useEffect(() => {
@@ -100,16 +67,6 @@ const WorkAdminList = () => {
 		}
 	}, [auth, jobId]);
 
-  const getJobList = () => {
-    axiosTokenApi
-      .get("/api/job/jobs/")
-      .then(res => {
-        setJobs(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
 
 	const sendMessage = async () => {
 		if (chatMessage === "") {
@@ -235,7 +192,7 @@ const WorkAdminList = () => {
       )
       .then(() => {
         openJobDetail(jobId);
-        getJobList();
+        props.getJobList();
       });
 
     setIsEdit(true);
@@ -491,5 +448,10 @@ const WorkAdminList = () => {
     </div>
   )
 }
+
+WorkAdminList.propTypes = {
+  jobs: PropTypes.any,
+  getJobList: PropTypes.any
+};
 
 export default WorkAdminList;
