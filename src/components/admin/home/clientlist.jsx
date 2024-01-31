@@ -134,7 +134,7 @@ const ClientList = () => {
           setIsValidJob(false);
         }
       })
-    
+    userDetail(userId);
   }
 
   const handleCancel = () => {
