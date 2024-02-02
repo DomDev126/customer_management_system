@@ -230,7 +230,7 @@ const Profile = () => {
 				</div>
 			</div>
 			<div className="absolute top-[-20px] left-0 w-20">
-				<img src="../../public/assets/img/profile_img.png" alt="profile_img" />
+				<img src="/assets/img/profile_img.png" alt="profile_img" />
 			</div>
 		</div>
 	)

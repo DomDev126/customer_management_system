@@ -309,7 +309,7 @@ const Worklist = () => {
 				</Transition.Root>
 			</div>
 			<div className="absolute top-[-20px] left-0 w-20">
-				<img className="bg-white" src="../../public/assets/img/repair_img.png" alt="profile_img" />
+				<img className="bg-white" src="/assets/img/repair_img.png" alt="profile_img" />
 			</div>
 		</div>
 	)
