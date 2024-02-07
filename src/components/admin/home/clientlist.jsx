@@ -23,14 +23,14 @@ const ClientList = (props) => {
   const [isEdit , setEdit] = useState(true);
   const [userId , setUserId] = useState("");
   const [addJob , setAddJob] = useState(true);
-  const [addCarnumber , setAddCarnumber] = useState("");
+  const [addCarnumber , setAddCarnumber] = useState(null);
   const [isValidJob , setIsValidJob] = useState(true);
   const [jobError , setJobError] = useState("");
-  const [addStatus , setAddStatus] = useState("");
-  const [addDate , setAddDate] = useState("")
-  const [addCharger , setAddCharger] = useState("");
-  const [addTitle , setAddTitle] = useState("");
-  const [addBudget , setAddBudget] = useState("");
+  const [addStatus , setAddStatus] = useState(1);
+  const [addDate , setAddDate] = useState(null)
+  const [addCharger , setAddCharger] = useState(null);
+  const [addTitle , setAddTitle] = useState(null);
+  const [addBudget , setAddBudget] = useState(null);
 
   useEffect(() => {
     getProfile();
@@ -113,17 +113,24 @@ const ClientList = (props) => {
   }
 
   const handleAddJob = () => {
+    let payload = {
+      user : userId,
+      car_number : addCarnumber,
+      status : addStatus,
+    }
+    if(addTitle) payload['title'] = addTitle;
+    if(addCharger) payload['charger'] = addCharger;
+    if(addBudget) payload['budget'] = addBudget;
+    if(addDate) payload['deadline'] = addDate;
     axiosTokenApi
-      .post("api/job/jobs/" , {
-        user : userId,
-        car_number : addCarnumber,
-        status : addStatus,
-        deadline : addDate,
-        charger : addCharger,
-        title : addTitle,
-        budget : addBudget
-      })
+      .post("api/job/jobs/" , payload)
       .then(() => {
+        setAddCarnumber(null);
+        setAddStatus(1);
+        setAddDate(null);
+        setAddCharger(null);
+        setAddTitle(null);
+        setAddBudget(null);
         getProfile();
         setAddJob(true);
       })
